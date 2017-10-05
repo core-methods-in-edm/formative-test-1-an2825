@@ -1,0 +1,67 @@
+---
+title: "formative.rmd"
+author: "Anh Nguyen"
+date: "October 5, 2017"
+output: html_document
+---
+
+```{r}
+D1<-HMXPC13_DI_v2_5_14_14
+```
+
+```{r}
+sum(with(D1, course_id=="HarvardX/CS50x/2012" & certified==1))
+```
+```{r}
+sum(with(D1, course_id=="HarvardX/CS50x/2012" & start_time_DI=="2012-10-15" & registered==1))
+```
+```{r}
+D1.5<-filter(D1, final_cc_cname_DI=="United States")
+D1.5
+```
+
+```{r}
+D2<-select(D1.5, userid_DI , start_time_DI)
+D2
+```
+```{r}
+D2.5<-select(D1, userid_DI, registered, start_time_DI)
+D2.5
+```
+```{r}
+D2.5 = mutate(D2.5, row = row_number())
+D2.5
+```
+```{r}
+D2.5$value <- 1
+D2.5
+```
+
+```{r}
+D3<-spread(D2.5,start_time_DI,value)
+```
+
+```{r}
+colnames(D3)[colnames(D3) == 'row'] <- 'student_id'
+```
+
+```{r}
+D4 <- subset(D3, select = -c(1))
+```
+
+```{r}
+M1<-data.matrix(D4, rownames.force = NA)
+```
+
+```{r}
+M2<-t(D4)
+```
+
+```{r}
+M3<-M1 %*% M2
+```
+
+```{r}
+diag(M3)<-NA
+```
+
